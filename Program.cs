@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Conway_s_Game_of_Life
+namespace Conways_Game_of_Life
 {
     public static class Program
     {

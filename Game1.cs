@@ -1,24 +1,33 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
 
-namespace Conway_s_Game_of_Life
+namespace Conways_Game_of_Life
 {
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private Grid _grid;
+        private Rectangle rec;
+
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            this.Window.AllowUserResizing = true;
+            _grid = new Grid();
+            _grid.Main(this, _graphics);
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            
 
             base.Initialize();
         }
@@ -26,7 +35,8 @@ namespace Conway_s_Game_of_Life
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            rec = new Rectangle(0, 0, 50, 50);
+           
             // TODO: use this.Content to load your game content here
         }
 
@@ -34,9 +44,9 @@ namespace Conway_s_Game_of_Life
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            _grid.Update();
             // TODO: Add your update logic here
-
+            
             base.Update(gameTime);
         }
 
@@ -45,7 +55,7 @@ namespace Conway_s_Game_of_Life
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-
+           
             base.Draw(gameTime);
         }
     }
