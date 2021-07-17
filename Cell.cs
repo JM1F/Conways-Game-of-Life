@@ -18,7 +18,12 @@ namespace Conways_Game_of_Life
         public Texture2D CellTexture { get; set; }
         public Color CellColour { get; set; }
 
-        public Cell(Game CurrentGame,GraphicsDeviceManager CurrentGraphics, int xpos, int ypos, Texture2D celltexture, Color cellcolour)
+        public bool IsActtive { get; set; }
+
+        public Rectangle CellRectangle { get; set; }
+
+
+        public Cell(Game CurrentGame,GraphicsDeviceManager CurrentGraphics, int xpos, int ypos, Texture2D celltexture, Color cellcolour, bool iscellactive)
         {
             Game = CurrentGame;
             Graphics = CurrentGraphics;
@@ -26,13 +31,28 @@ namespace Conways_Game_of_Life
             YPosition = ypos;
             CellTexture = celltexture;
             CellColour = cellcolour;
+            IsActtive = iscellactive;
 
             CellTexture.SetData(new[] { CellColour });
+            CellRectangle = new Rectangle(XPosition, YPosition, 9,9);
+
         }
 
         public void DrawInput()
         {
             
+        }
+        public void Update()
+        {
+            var mouseState = Mouse.GetState();
+            var mouseLocation = new Point(mouseState.X,mouseState.Y);
+
+            if (CellRectangle.Contains(mouseLocation))
+            {
+                IsActtive = mouseState.LeftButton == ButtonState.Pressed;
+            }
+            
+                
         }
     }
 }

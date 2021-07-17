@@ -51,7 +51,11 @@ namespace Conways_Game_of_Life
                 Exit();
             _grid.Update();
             // TODO: Add your update logic here
-            
+            foreach (Cell cells in GridList)
+            {
+                cells.Update();
+            }
+
 
             base.Update(gameTime);
         }
@@ -64,7 +68,11 @@ namespace Conways_Game_of_Life
 
             foreach(Cell cells in GridList)
             {
-                _spriteBatch.Draw(cells.CellTexture, new Rectangle(cells.XPosition, cells.YPosition, 9, 9), cells.CellColour);
+                if (cells.IsActtive == true)
+                {
+                    _spriteBatch.Draw(cells.CellTexture, cells.CellRectangle, cells.CellColour);
+                }
+                
             }
 
 

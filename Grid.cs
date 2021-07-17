@@ -50,12 +50,18 @@ namespace Conways_Game_of_Life
         }
         public List<Cell> CreateGrid()
         {
-            GridOfCells = new List<Cell>(); 
+            GridOfCells = new List<Cell>();
+            Random random = new Random();
             for (var i = 0; i <=ViewportWidth; i+=TileSize)
             {
                 for (var j = 0; j <= ViewportHeight; j += TileSize)
                 {
-                    GridOfCells.Add(new Cell(Game, Graphics, i, j, new Texture2D(Game.GraphicsDevice, 1, 1), Color.Purple));
+                    
+                    GridOfCells.Add(new Cell(Game, Graphics, i, j, new Texture2D(Game.GraphicsDevice, 1, 1), Color.Purple, false));
+                    
+                    
+                    
+                    
                 }
             }
 
