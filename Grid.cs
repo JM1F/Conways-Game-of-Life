@@ -9,26 +9,30 @@ using System.Diagnostics;
 namespace Conways_Game_of_Life
 {
     
-    class Grid
+    public class Grid
     {
         public Game Game;
         public GraphicsDeviceManager Graphics;
 
         public int ViewportWidth;
         public int ViewportHeight;
-        
+        public int TileSize = 10;
+
+        List<Cell> GridOfCells;
 
         public void Main(Game CurrentGame, GraphicsDeviceManager CurentGraphics)
         {
             Game = CurrentGame;
             Graphics = CurentGraphics;
 
+            ViewportHeight = Game.GraphicsDevice.Viewport.Height;
+            ViewportWidth = Game.GraphicsDevice.Viewport.Width;
+
         }
 
         public void Update()
         {
-            ViewportHeight = Game.GraphicsDevice.Viewport.Height;
-            ViewportWidth = Game.GraphicsDevice.Viewport.Width;
+            
 
             Debug.WriteLine(ViewportHeight);
             Debug.WriteLine(ViewportWidth);
@@ -44,7 +48,20 @@ namespace Conways_Game_of_Life
 
 
         }
-        
+        public List<Cell> CreateGrid()
+        {
+            GridOfCells = new List<Cell>(); 
+            for (var i = 0; i <=ViewportWidth; i+=TileSize)
+            {
+                for (var j = 0; j <= ViewportHeight; j += TileSize)
+                {
+                    GridOfCells.Add(new Cell(Game, Graphics, i, j, new Texture2D(Game.GraphicsDevice, 1, 1), Color.Purple));
+                }
+            }
+
+            return GridOfCells;
+        }
+
     }
 
 

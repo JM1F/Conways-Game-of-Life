@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Conways_Game_of_Life
 {
@@ -10,8 +13,11 @@ namespace Conways_Game_of_Life
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Grid _grid;
-        private Rectangle rec;
+        
+        private Texture2D rect;
 
+        public List<Cell> GridList;
+        
 
         public Game1()
         {
@@ -20,23 +26,22 @@ namespace Conways_Game_of_Life
             IsMouseVisible = true;
             this.Window.AllowUserResizing = true;
             _grid = new Grid();
-            _grid.Main(this, _graphics);
+
         }
 
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
-            
-
             base.Initialize();
+            _grid.Main(this, _graphics);
+            GridList = _grid.CreateGrid();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            rec = new Rectangle(0, 0, 50, 50);
-           
+            rect = new Texture2D(GraphicsDevice, 1, 1);
+            rect.SetData(new[] { Color.Orange});
             // TODO: use this.Content to load your game content here
         }
 
@@ -47,13 +52,24 @@ namespace Conways_Game_of_Life
             _grid.Update();
             // TODO: Add your update logic here
             
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            _spriteBatch.Begin();
+            
 
+            foreach(Cell cells in GridList)
+            {
+                _spriteBatch.Draw(cells.CellTexture, new Rectangle(cells.XPosition, cells.YPosition, 9, 9), cells.CellColour);
+            }
+
+
+
+            _spriteBatch.End();
             // TODO: Add your drawing code here
            
             base.Draw(gameTime);
