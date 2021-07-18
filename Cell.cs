@@ -22,8 +22,9 @@ namespace Conways_Game_of_Life
 
         public Rectangle CellRectangle { get; set; }
 
+        public int CellIndex { get; set; }
 
-        public Cell(Game CurrentGame,GraphicsDeviceManager CurrentGraphics, int xpos, int ypos, Texture2D celltexture, Color cellcolour, bool iscellactive)
+        public Cell(Game CurrentGame,GraphicsDeviceManager CurrentGraphics, int xpos, int ypos, Texture2D celltexture, Color cellcolour, bool iscellactive, int cellindex)
         {
             Game = CurrentGame;
             Graphics = CurrentGraphics;
@@ -32,6 +33,7 @@ namespace Conways_Game_of_Life
             CellTexture = celltexture;
             CellColour = cellcolour;
             IsActtive = iscellactive;
+            CellIndex = cellindex;
 
             CellTexture.SetData(new[] { CellColour });
             CellRectangle = new Rectangle(XPosition, YPosition, 9,9);
@@ -42,17 +44,30 @@ namespace Conways_Game_of_Life
         {
             
         }
-        public void Update()
+        public void Update(Grid grid)
         {
             var mouseState = Mouse.GetState();
-            var mouseLocation = new Point(mouseState.X,mouseState.Y);
+            var mouseLocation = new  Point(mouseState.X,mouseState.Y);
 
             if (CellRectangle.Contains(mouseLocation))
             {
-                IsActtive = mouseState.LeftButton == ButtonState.Pressed;
-            }
-            
+                if (mouseState.LeftButton == ButtonState.Pressed)
+                {
+                    IsActtive = true;
+                }
+                if (mouseState.RightButton == ButtonState.Pressed)
+                {
+                    IsActtive = false;
+                }
                 
+                
+            }
+
+            
+
+
+
+
         }
     }
 }

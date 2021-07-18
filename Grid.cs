@@ -18,7 +18,7 @@ namespace Conways_Game_of_Life
         public int ViewportHeight;
         public int TileSize = 10;
 
-        List<Cell> GridOfCells;
+        public List<Cell> GridOfCells { get; set; }
 
         public void Main(Game CurrentGame, GraphicsDeviceManager CurentGraphics)
         {
@@ -33,35 +33,32 @@ namespace Conways_Game_of_Life
         public void Update()
         {
             
+           
 
-            Debug.WriteLine(ViewportHeight);
-            Debug.WriteLine(ViewportWidth);
-
-            
-            
-            
         }
         
-        public void Draw()
+        public Grid ReturnGrid()
         {
-            
-
-
+            return this;
         }
+
+        
         public List<Cell> CreateGrid()
         {
             GridOfCells = new List<Cell>();
-            Random random = new Random();
+            
+            int indexofcell = 0;
+            Texture2D CellTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
+
+
             for (var i = 0; i <=ViewportWidth; i+=TileSize)
             {
                 for (var j = 0; j <= ViewportHeight; j += TileSize)
                 {
-                    
-                    GridOfCells.Add(new Cell(Game, Graphics, i, j, new Texture2D(Game.GraphicsDevice, 1, 1), Color.Purple, false));
-                    
-                    
-                    
-                    
+                    indexofcell += 1;
+
+                    GridOfCells.Add(new Cell(Game, Graphics, i, j, CellTexture , Color.Purple, false, indexofcell));
+
                 }
             }
 
