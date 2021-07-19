@@ -13,7 +13,7 @@ namespace Conways_Game_of_Life
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Grid _grid;
-        
+        public View CurrentView;
         public List<Cell> GridList;
         
 
@@ -29,15 +29,19 @@ namespace Conways_Game_of_Life
 
         protected override void Initialize()
         {
-            
+
 
             // TODO: Add your initialization logic here
             base.Initialize();
 
             _grid = new Grid();
-            _grid.Main(this, _graphics);
+
+            CurrentView = new View();
+            _grid.Main(this, _graphics, CurrentView);
 
             GridList = _grid.CreateGrid();
+
+            
         }
 
         protected override void LoadContent()
@@ -51,48 +55,25 @@ namespace Conways_Game_of_Life
 
         protected override void Update(GameTime gameTime)
         {
-
-            base.Update(gameTime);
+            CurrentView.Update(gameTime, GraphicsDevice.Viewport);
+            
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.R))
-                foreach (Cell cells in GridList)
-                {
-                    cells.IsActtive = false;
-                }
-
-            
+            _grid.Update();
+            base.Update(gameTime);
             // TODO: Add your update logic here
-            foreach (Cell cells in GridList)
-            {
-                cells.Update(_grid.ReturnGrid());
-            }
-            
-
-            
         }
 
         protected override void Draw(GameTime gameTime)
         {
-
-            base.Draw(gameTime);
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            _spriteBatch.Begin();
-            
+            _grid.Draw(_spriteBatch);
+            base.Draw(gameTime);
 
-            foreach(Cell cells in GridList)
-            {
-                if (cells.IsActtive == true)
-                {
-                    _spriteBatch.Draw(cells.CellTexture, cells.CellRectangle, cells.CellColour);
-                }
-                
-            }
-            _spriteBatch.End();
             // TODO: Add your drawing code here
-           
-            
+
+
         }
     }
 }

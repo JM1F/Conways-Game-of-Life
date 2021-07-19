@@ -15,8 +15,7 @@ namespace Conways_Game_of_Life
 
         public int XPosition;
         public int YPosition;
-        public Texture2D CellTexture { get; set; }
-        public Color CellColour { get; set; }
+        
 
         public bool IsActtive { get; set; }
 
@@ -24,20 +23,26 @@ namespace Conways_Game_of_Life
 
         public int CellIndex { get; set; }
 
-        public Cell(Game CurrentGame,GraphicsDeviceManager CurrentGraphics, int xpos, int ypos, Texture2D celltexture, Color cellcolour, bool iscellactive, int cellindex)
+        public Vector2 CellVector { get; set; }
+
+        public int TileSize = 10;
+
+        public bool IsHovering { get; set; }
+
+
+        public Cell(Game CurrentGame,GraphicsDeviceManager CurrentGraphics, Vector2 vector ,int xpos, int ypos,  bool iscellactive, int cellindex, bool iscellhovered)
         {
             Game = CurrentGame;
             Graphics = CurrentGraphics;
             XPosition = xpos;
             YPosition = ypos;
-            CellTexture = celltexture;
-            CellColour = cellcolour;
+            CellVector = vector;
             IsActtive = iscellactive;
             CellIndex = cellindex;
+            IsHovering = iscellhovered;
 
-            CellTexture.SetData(new[] { CellColour });
-            CellRectangle = new Rectangle(XPosition, YPosition, 9,9);
-
+            CellVector = new Vector2(MathF.Floor(CellVector.X / TileSize), MathF.Floor(CellVector.Y / TileSize));
+            
         }
 
         public void DrawInput()
@@ -46,22 +51,7 @@ namespace Conways_Game_of_Life
         }
         public void Update(Grid grid)
         {
-            var mouseState = Mouse.GetState();
-            var mouseLocation = new  Point(mouseState.X,mouseState.Y);
-
-            if (CellRectangle.Contains(mouseLocation))
-            {
-                if (mouseState.LeftButton == ButtonState.Pressed)
-                {
-                    IsActtive = true;
-                }
-                if (mouseState.RightButton == ButtonState.Pressed)
-                {
-                    IsActtive = false;
-                }
-                
-                
-            }
+            
 
             
 
