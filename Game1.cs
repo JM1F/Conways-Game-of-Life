@@ -23,7 +23,7 @@ namespace Conways_Game_of_Life
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            this.Window.AllowUserResizing = true;
+            this.Window.AllowUserResizing = false;
 
         }
 
@@ -32,16 +32,21 @@ namespace Conways_Game_of_Life
 
 
             // TODO: Add your initialization logic here
-            base.Initialize();
+            
 
             _grid = new Grid();
+
+            _graphics.PreferredBackBufferWidth = 1280;
+            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.ApplyChanges();
 
             CurrentView = new View();
             _grid.Main(this, _graphics, CurrentView);
 
             GridList = _grid.CreateGrid();
 
-            
+            base.Initialize();
+
         }
 
         protected override void LoadContent()
@@ -55,7 +60,7 @@ namespace Conways_Game_of_Life
 
         protected override void Update(GameTime gameTime)
         {
-            CurrentView.Update(gameTime, GraphicsDevice.Viewport);
+            CurrentView.Update(gameTime, GraphicsDevice.Viewport, Window);
             
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
