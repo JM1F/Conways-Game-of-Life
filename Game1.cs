@@ -14,7 +14,7 @@ namespace Conways_Game_of_Life
         private SpriteBatch _spriteBatch;
         private Grid _grid;
         public View CurrentView;
-        public List<Cell> GridList;
+        public Cell[,] GridList;
         
 
         public Game1()
@@ -23,16 +23,12 @@ namespace Conways_Game_of_Life
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            this.Window.AllowUserResizing = false;
+            this.Window.AllowUserResizing = true;
 
         }
 
         protected override void Initialize()
         {
-
-
-            // TODO: Add your initialization logic here
-            
 
             _grid = new Grid();
 
@@ -52,10 +48,6 @@ namespace Conways_Game_of_Life
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            
-
-
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
@@ -67,7 +59,6 @@ namespace Conways_Game_of_Life
 
             _grid.Update();
             base.Update(gameTime);
-            // TODO: Add your update logic here
         }
 
         protected override void Draw(GameTime gameTime)
@@ -75,10 +66,6 @@ namespace Conways_Game_of_Life
             GraphicsDevice.Clear(Color.CornflowerBlue);
             _grid.Draw(_spriteBatch);
             base.Draw(gameTime);
-
-            // TODO: Add your drawing code here
-
-
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Conways_Game_of_Life
 
         public Rectangle CellRectangle { get; set; }
 
+        public int NeighbourCount { get; set; } = 0;
         public int CellIndex { get; set; }
 
         public Vector2 CellVector { get; set; }
@@ -43,21 +44,6 @@ namespace Conways_Game_of_Life
 
             CellVector = new Vector2(MathF.Floor(CellVector.X / TileSize), MathF.Floor(CellVector.Y / TileSize));
             
-        }
-
-        public void DrawInput()
-        {
-            
-        }
-        public void Update(Grid grid)
-        {
-            
-
-            
-
-
-
-
         }
     }
 }

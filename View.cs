@@ -34,9 +34,7 @@ namespace Conways_Game_of_Life
             var viewportWidth = viewport.Width;
             var viewportHeight = viewport.Height;
 
-
             var mouse = Mouse.GetState();
-
 
             int scrollValue = mouse.ScrollWheelValue - oldMouse.ScrollWheelValue;
 
@@ -55,12 +53,9 @@ namespace Conways_Game_of_Life
                 {
                     Zoom = 16;
                 }
-
             }
 
-
             if (mouse.MiddleButton== ButtonState.Pressed)
-
             {
                 if (Zoom != 1)
                 {
@@ -71,12 +66,7 @@ namespace Conways_Game_of_Life
                 PositionX += posX * 30 / (Zoom * 0.5f) * (float)time.ElapsedGameTime.TotalSeconds;
                 PositionY += posY * 30 / (Zoom * 0.5f) * (float)time.ElapsedGameTime.TotalSeconds;
                 }
-                
-
             }
-            
-            
-          
             if (PositionX > 0)
             {
                 PositionX = 0;
@@ -93,26 +83,17 @@ namespace Conways_Game_of_Life
             {
                 PositionY = PreviousPositionY;
             }
-            
-
             if (oldzoom > Zoom)
             {
                 PositionX = 0;
                 PositionY = 0;
                 
                 Matrix = Matrix.CreateTranslation(PositionX,PositionY , 0) * Matrix.CreateScale(Zoom);
-                
             }
-
             else
             {
                 Matrix = Matrix.CreateTranslation(PositionX, PositionY, 0) * Matrix.CreateScale(Zoom);
             }
-
-
-
-
-
 
             InverseMatrix = Matrix.Invert(Matrix);
 
