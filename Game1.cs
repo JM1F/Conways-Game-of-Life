@@ -14,8 +14,8 @@ namespace Conways_Game_of_Life
         public Cell[,] GridList;
         public Rectangle LogoRectangle;
         public bool Logohovered { get; set; } = false;
-        public bool Logoclicked { get; set; } = false;
-
+        public bool UIActive { get; set; } = false;
+        public SpriteFont font;
         public Texture2D Logo;
         public KeyboardState PreviousKeyboardstate;
         
@@ -54,6 +54,8 @@ namespace Conways_Game_of_Life
             _spriteBatchLOGO = new SpriteBatch(GraphicsDevice);
             Logo = this.Content.Load<Texture2D>("GOLLogo");
             LogoRectangle = new Rectangle(490, 0, 300, 125);
+
+            font = this.Content.Load<SpriteFont>("ArialFont");
         }
 
         protected override void Update(GameTime gameTime)
@@ -68,9 +70,10 @@ namespace Conways_Game_of_Life
             
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
             if (keyboardState.IsKeyDown(Keys.T) && PreviousKeyboardstate.IsKeyUp(Keys.T))
             {
-                Logoclicked = !Logoclicked;
+                UIActive = !UIActive;
             }
 
 
@@ -85,6 +88,7 @@ namespace Conways_Game_of_Life
             
 
             _grid.Update();
+            
             base.Update(gameTime);
 
             PreviousKeyboardstate = keyboardState;
@@ -93,13 +97,22 @@ namespace Conways_Game_of_Life
         protected override void Draw(GameTime gameTime)
         {
             
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
             _grid.Draw(_spriteBatch);
 
             _spriteBatchLOGO.Begin();
            
-            if (Logoclicked == false)
+            if (UIActive == false)
             {
+                if (_grid.GameInProgress == true)
+                {
+                    _spriteBatchLOGO.DrawString(font,"Running", new Vector2(0,0), Color.Green);
+                }
+                else
+                {
+                    _spriteBatchLOGO.DrawString(font, "Not Running", new Vector2(0, 0), Color.Red);
+                }
+
                 if (Logohovered == true)
                 {
                     _spriteBatchLOGO.Draw(Logo, LogoRectangle, new Color(Color.White, 0.9f));

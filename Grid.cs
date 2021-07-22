@@ -50,6 +50,7 @@ namespace Conways_Game_of_Life
             {
                 ProceedToNextGeneration();
             }
+
             if (keyboardState.IsKeyDown(Keys.Space) && previousKeyboardstate.IsKeyUp(Keys.Space))
             {
                 GameInProgress = !GameInProgress;
@@ -177,6 +178,7 @@ namespace Conways_Game_of_Life
 
             return cellNeighbours;
         }
+        
 
         public void Draw(SpriteBatch spriteBatch)
         {
@@ -189,11 +191,11 @@ namespace Conways_Game_of_Life
                     if (GridOfCells[i, j].IsActtive == true)
                     {
 
-                        spriteBatch.Draw(CellTexture, new Vector2((GridOfCells[i, j].XPosition), GridOfCells[i, j].YPosition), null, Color.Purple, 0, Vector2.Zero, TileSize - 2, SpriteEffects.None, 0);
+                        spriteBatch.Draw(CellTexture, new Vector2((GridOfCells[i, j].XPosition), GridOfCells[i, j].YPosition), null, Color.Gray, 0, Vector2.Zero, TileSize - 2, SpriteEffects.None, 0);
                     }
                     if (GridOfCells[i, j].IsHovering == true)
                     {
-                        spriteBatch.Draw(CellTexture, new Vector2((GridOfCells[i, j].XPosition), GridOfCells[i, j].YPosition), null, Color.Orange, 0, Vector2.Zero, TileSize - 2, SpriteEffects.None, 0);
+                        spriteBatch.Draw(CellTexture, new Vector2((GridOfCells[i, j].XPosition), GridOfCells[i, j].YPosition), null, Color.DarkGray, 0, Vector2.Zero, TileSize - 2, SpriteEffects.None, 0);
                     }
                 }
             }
@@ -212,7 +214,7 @@ namespace Conways_Game_of_Life
            
             int indexofcell = 0;
             CellTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
-            CellTexture.SetData(new Color[] { Color.Purple});
+            CellTexture.SetData(new Color[] { Color.DarkGray});
 
             for (var i = 0; i <=ViewportWidth - 1; i+=TileSize)
             {
