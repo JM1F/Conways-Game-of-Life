@@ -210,7 +210,7 @@ namespace Conways_Game_of_Life
 
         public Cell[,] CreateGrid()
         {
-            GridOfCells = new Cell[ViewportWidth,ViewportHeight];
+            
            
             int indexofcell = 0;
             CellTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
