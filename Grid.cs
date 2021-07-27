@@ -28,8 +28,6 @@ namespace Conways_Game_of_Life
 
         public Dictionary<Point, int> GridOfNeighbourCells { get; set; }
 
-        
-
         public KeyboardState keyboardState { get; set; }
 
         public Vector2 mouseLocationSimplified { get; set; }
@@ -67,11 +65,10 @@ namespace Conways_Game_of_Life
             {
                 GridOfCells = new Dictionary<Point, bool>();
             }
-            if (keyboardState.IsKeyDown(Keys.Right) && previousKeyboardstate.IsKeyUp(Keys.Right))
+            if (keyboardState.IsKeyDown(Keys.Right) && previousKeyboardstate.IsKeyUp(Keys.Right) && GameInProgress == false)
             {
                 ProceedToNextGeneration();
             }
-
 
 
             if (mouseState.LeftButton == ButtonState.Pressed)
@@ -98,7 +95,6 @@ namespace Conways_Game_of_Life
                 ProceedToNextGeneration();
             }
 
-
             previousKeyboardstate = keyboardState;
         }
 
@@ -107,14 +103,11 @@ namespace Conways_Game_of_Life
         {
             Dictionary<Point, bool> NextGridOfCells = new Dictionary<Point, bool>();
 
-
             GridOfNeighbourCells = new Dictionary<Point, int>();
 
             foreach (var cell in GridOfCells)
             {
                 int cellNeighbours = 0;
-
-                
 
                 cellNeighbours += CheckNeighbours(cell, -1, 0);
                 cellNeighbours += CheckNeighbours(cell, 0, -1);
@@ -179,12 +172,8 @@ namespace Conways_Game_of_Life
             
             spriteBatch.Draw(CellTexture, new Vector2((mouseLocationSimplified.X * TileSize), mouseLocationSimplified.Y * TileSize), null, Color.DarkGray, 0, Vector2.Zero, TileSize - 2, SpriteEffects.None, 0);
 
-
-
-
             spriteBatch.End();
         }
-        
         
         public void CreateGrid()
         {

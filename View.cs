@@ -61,8 +61,8 @@ namespace Conways_Game_of_Life
                 posY = mouse.Position.Y - oldMouse.Position.Y;
 
                 
-                PositionX += posX * 30 / (Zoom * 0.5f) * (float)time.ElapsedGameTime.TotalSeconds;
-                PositionY += posY * 30 / (Zoom * 0.5f) * (float)time.ElapsedGameTime.TotalSeconds;
+                PositionX += posX * 60 / (Zoom * 0.5f) * (float)time.ElapsedGameTime.TotalSeconds;
+                PositionY += posY * 60 / (Zoom * 0.5f) * (float)time.ElapsedGameTime.TotalSeconds;
                 
             }
            

@@ -26,7 +26,7 @@ namespace Conways_Game_of_Life
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            this.Window.AllowUserResizing = false;
+            this.Window.AllowUserResizing = true;
 
         }
         
