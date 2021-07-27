@@ -11,7 +11,7 @@ namespace Conways_Game_of_Life
         private SpriteBatch _spriteBatchLOGO;
         private Grid _grid;
         public View CurrentView;
-        public Cell[,] GridList;
+        
         public Rectangle LogoRectangle;
         public bool Logohovered { get; set; } = false;
         public bool UIActive { get; set; } = false;

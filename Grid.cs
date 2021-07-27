@@ -181,8 +181,6 @@ namespace Conways_Game_of_Life
 
             CellTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
             CellTexture.SetData(new Color[] { Color.DarkGray});
-
-         
         }
 
     }
