@@ -31,8 +31,6 @@ namespace Conways_Game_of_Life
 
         public void Update(GameTime time, Viewport viewport, GameWindow window)
         {
-            var viewportWidth = viewport.Width;
-            var viewportHeight = viewport.Height;
 
             var mouse = Mouse.GetState();
 
@@ -40,9 +38,10 @@ namespace Conways_Game_of_Life
 
             if (scrollValue < 0)
             {
-                if (Zoom > 1)
+                Zoom /= 0.5f;
+                if (Zoom > 0.5f)
                 {
-                    Zoom /= 2;
+                    Zoom = 0.5f;
                 }
             }
 
@@ -55,45 +54,21 @@ namespace Conways_Game_of_Life
                 }
             }
 
-            if (mouse.MiddleButton== ButtonState.Pressed)
+            if (mouse.MiddleButton == ButtonState.Pressed)
             {
-                if (Zoom != 1)
-                {
-                    posX = mouse.Position.X - oldMouse.Position.X;
-                    posY = mouse.Position.Y - oldMouse.Position.Y;
+               
+                posX = mouse.Position.X - oldMouse.Position.X;
+                posY = mouse.Position.Y - oldMouse.Position.Y;
 
                 
-                PositionX += posX * 30 / (Zoom * 0.5f) * (float)time.ElapsedGameTime.TotalSeconds;
-                PositionY += posY * 30 / (Zoom * 0.5f) * (float)time.ElapsedGameTime.TotalSeconds;
-                }
-            }
-            if (PositionX > 0)
-            {
-                PositionX = 0;
-            }
-            if (PositionY > 0)
-            {
-                PositionY = 0;
-            }
-            if ( (PositionX + -(viewportWidth * (Matrix.M44 / Zoom))) < -viewportWidth )
-            {
-                PositionX = PreviousPositionX;
-            }
-            if ( (PositionY + -(viewportHeight * (Matrix.M44 / Zoom))) < -viewportHeight )
-            {
-                PositionY = PreviousPositionY;
-            }
-            if (oldzoom > Zoom)
-            {
-                PositionX = 0;
-                PositionY = 0;
+                PositionX += posX * 60 / (Zoom * 0.5f) * (float)time.ElapsedGameTime.TotalSeconds;
+                PositionY += posY * 60 / (Zoom * 0.5f) * (float)time.ElapsedGameTime.TotalSeconds;
                 
-                Matrix = Matrix.CreateTranslation(PositionX,PositionY , 0) * Matrix.CreateScale(Zoom);
             }
-            else
-            {
-                Matrix = Matrix.CreateTranslation(PositionX, PositionY, 0) * Matrix.CreateScale(Zoom);
-            }
+           
+            
+             Matrix = Matrix.CreateTranslation(PositionX, PositionY, 0) * Matrix.CreateScale(Zoom);
+            
 
             InverseMatrix = Matrix.Invert(Matrix);
 

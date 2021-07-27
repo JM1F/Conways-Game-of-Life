@@ -26,7 +26,7 @@ namespace Conways_Game_of_Life
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            this.Window.AllowUserResizing = false;
+            this.Window.AllowUserResizing = true;
 
         }
         
@@ -42,7 +42,7 @@ namespace Conways_Game_of_Life
             CurrentView = new View();
             _grid.Main(this, _graphics, CurrentView);
 
-            GridList = _grid.CreateGrid();
+            _grid.CreateGrid();
 
             base.Initialize();
 

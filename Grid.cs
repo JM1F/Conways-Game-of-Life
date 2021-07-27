@@ -16,14 +16,23 @@ namespace Conways_Game_of_Life
 
         public int ViewportWidth;
         public int ViewportHeight;
+
+
         public int TileSize = 10;
         public Texture2D CellTexture;
 
         public View CurrentView;
         public KeyboardState previousKeyboardstate;
 
-        public Cell[,] GridOfCells { get; set; }
-        public bool GameInProgress { get; set; }
+        public Dictionary<Point, bool> GridOfCells { get; set; }
+
+        public Dictionary<Point, int> GridOfNeighbourCells { get; set; }
+
+        public KeyboardState keyboardState { get; set; }
+
+        public Vector2 mouseLocationSimplified { get; set; }
+
+        public bool GameInProgress { get; set; } = false;
 
         public void Main(Game CurrentGame, GraphicsDeviceManager CurentGraphics, View view)
         {
@@ -37,199 +46,143 @@ namespace Conways_Game_of_Life
 
         public void Update()
         {
+            
 
-            var mouseState = Mouse.GetState();
-
-            var mouseLocation = Vector2.Transform(mouseState.Position.ToVector2(), CurrentView.InverseMatrix);
-
-            mouseLocation = new Vector2(MathF.Floor(mouseLocation.X / TileSize), MathF.Floor(mouseLocation.Y / TileSize));
-
-            var keyboardState = Keyboard.GetState();
-
-            if (keyboardState.IsKeyDown(Keys.Left) && previousKeyboardstate.IsKeyUp(Keys.Left) && GameInProgress == false)
-            {
-                ProceedToNextGeneration();
-            }
+            keyboardState = Keyboard.GetState();
 
             if (keyboardState.IsKeyDown(Keys.Space) && previousKeyboardstate.IsKeyUp(Keys.Space))
             {
                 GameInProgress = !GameInProgress;
             }
 
+            var mouseState = Mouse.GetState();
 
+            var mouseLocation = Vector2.Transform(mouseState.Position.ToVector2(), CurrentView.InverseMatrix);
+
+            mouseLocationSimplified = new Vector2(MathF.Floor(mouseLocation.X / TileSize), MathF.Floor(mouseLocation.Y / TileSize));
+
+            if (keyboardState.IsKeyDown(Keys.R))
+            {
+                GridOfCells = new Dictionary<Point, bool>();
+            }
+            if (keyboardState.IsKeyDown(Keys.Right) && previousKeyboardstate.IsKeyUp(Keys.Right) && GameInProgress == false)
+            {
+                ProceedToNextGeneration();
+            }
+
+
+            if (mouseState.LeftButton == ButtonState.Pressed)
+            {
+                if (GridOfCells.ContainsKey(mouseLocationSimplified.ToPoint() ) == true )
+                {
+                    GridOfCells[mouseLocationSimplified.ToPoint()] = true;
+                }
+                else
+                {
+                    GridOfCells.Add(mouseLocationSimplified.ToPoint(), true);
+                }
+            }
+            if (mouseState.RightButton == ButtonState.Pressed)
+            {
+                if (GridOfCells.ContainsKey(mouseLocationSimplified.ToPoint()) == true)
+                {
+                    GridOfCells.Remove(mouseLocationSimplified.ToPoint()); 
+                }
+
+            }
             if (GameInProgress == true)
             {
                 ProceedToNextGeneration();
             }
-            if (keyboardState.IsKeyDown(Keys.R))
-            {
-                for (int i = 0; i < GridOfCells.GetLength(0); i += TileSize)
-                {
-                    for (int j = 0; j < GridOfCells.GetLength(1); j += TileSize)
-                    {
-                        GridOfCells[i, j].IsActtive = false;
-                    }
-                }
-            }
 
-            for (int i = 0; i < GridOfCells.GetLength(0); i += TileSize)
-            {
-                for (int j = 0; j < GridOfCells.GetLength(1); j += TileSize)
-                {
-
-                    if (GridOfCells[i, j].CellVector == mouseLocation)
-                    {
-                        if (GridOfCells[i, j].IsActtive == false)
-                        {
-                            GridOfCells[i, j].IsHovering = true;
-                        }
-
-                        if (mouseState.LeftButton == ButtonState.Pressed)
-                        {
-                            GridOfCells[i, j].IsActtive = true;
-
-                        }
-                        if (mouseState.RightButton == ButtonState.Pressed)
-                        {
-                            GridOfCells[i, j].IsActtive = false;
-                        }
-
-                    }
-                    else
-                    {
-                        GridOfCells[i, j].IsHovering = false;
-                    }
-
-                }
-            }
-            
             previousKeyboardstate = keyboardState;
         }
 
-        public void ProceedToNextGeneration()
+        
+       public void ProceedToNextGeneration()
         {
-           
-            for (int i = 0; i < GridOfCells.GetLength(0); i += TileSize)
+            Dictionary<Point, bool> NextGridOfCells = new Dictionary<Point, bool>();
+
+            GridOfNeighbourCells = new Dictionary<Point, int>();
+
+            foreach (var cell in GridOfCells)
             {
-                for (int j = 0; j < GridOfCells.GetLength(1); j += TileSize)
-                {
-                    int cellNeighbours = 0;
+                int cellNeighbours = 0;
 
-                    cellNeighbours += CheckNeighbours(GridOfCells, i, j, -TileSize, 0);
-                    cellNeighbours += CheckNeighbours(GridOfCells, i, j, 0, -TileSize);
-                    cellNeighbours += CheckNeighbours(GridOfCells, i, j, TileSize, 0);
-                    cellNeighbours += CheckNeighbours(GridOfCells, i, j, 0, TileSize);
+                cellNeighbours += CheckNeighbours(cell, -1, 0);
+                cellNeighbours += CheckNeighbours(cell, 0, -1);
+                cellNeighbours += CheckNeighbours(cell, 1, 0);
+                cellNeighbours += CheckNeighbours(cell, 0, 1);
 
-                    cellNeighbours += CheckNeighbours(GridOfCells, i, j, TileSize, TileSize);
-                    cellNeighbours += CheckNeighbours(GridOfCells, i, j, -TileSize, -TileSize);
-                    cellNeighbours += CheckNeighbours(GridOfCells, i, j, -TileSize, TileSize);
-                    cellNeighbours += CheckNeighbours(GridOfCells, i, j, TileSize, -TileSize);
-
-                    GridOfCells[i, j].NeighbourCount = cellNeighbours;
-                   
-                }
-            }
-
-
-            for (int i = 0; i < GridOfCells.GetLength(0); i += TileSize)
-            {
-                for (int j = 0; j < GridOfCells.GetLength(1); j += TileSize)
-                {
-                    if (GridOfCells[i,j].IsActtive == true)
-                    {
-                        if (GridOfCells[i, j].NeighbourCount < 2 || GridOfCells[i, j].NeighbourCount > 3)
-                        {
-                            GridOfCells[i, j].IsActtive = false;
-                        }
-                        if (GridOfCells[i,j].NeighbourCount >= 2 && GridOfCells[i,j].NeighbourCount < 4)
-                        {
-                            GridOfCells[i, j].IsActtive = true;
-                        }
-
-                    }
-                    else
-                    {
-                        if (GridOfCells[i,j].NeighbourCount == 3)
-                        {
-                            GridOfCells[i, j].IsActtive = true;
-                        }
-                    }
-
-                }
-            }
-
-        }
-        public int CheckNeighbours(Cell[,] cellGrid, int cellPostionX, int cellPositionY  ,int conditionalTileSizeX, int conditionalTileSizeY )
-        {
-            int cellNeighbours = 0;
-            
-            if ( cellPostionX + conditionalTileSizeX < cellGrid.GetLength(0) && cellPostionX + conditionalTileSizeX  >= 0 && cellPositionY + conditionalTileSizeY < cellGrid.GetLength(1) && cellPositionY + conditionalTileSizeY >= 0)
-            {
+                cellNeighbours += CheckNeighbours(cell, 1, 1);
+                cellNeighbours += CheckNeighbours(cell, -1, -1);
+                cellNeighbours += CheckNeighbours(cell, -1, 1);
+                cellNeighbours += CheckNeighbours(cell, 1, -1);
                 
-                if (cellGrid[cellPostionX + conditionalTileSizeX, cellPositionY + conditionalTileSizeY].IsActtive)
+                if ( cellNeighbours >= 2 && cellNeighbours < 4 )
                 {
-                    cellNeighbours += 1;
+                    NextGridOfCells.Add(cell.Key,cell.Value);
+                }
+
+            }
+            foreach (var neighbourCell in GridOfNeighbourCells)
+            {
+                if (neighbourCell.Value == 3)
+                {
+                    if (NextGridOfCells.ContainsKey(neighbourCell.Key) == false)
+                    {
+                        NextGridOfCells.Add(neighbourCell.Key, true);
+                    }
 
                 }
 
             }
-            
 
+            GridOfCells = NextGridOfCells;
 
-            return cellNeighbours;
         }
         
+        public int CheckNeighbours(KeyValuePair<Point, bool> cell, int directionX, int directionY)
+        {
+            int cellNeighbours = 0;
+            Vector2 cellVector = new Vector2(cell.Key.X + directionX, cell.Key.Y + directionY);
+            if (GridOfCells.ContainsKey( cellVector.ToPoint() ) == true)     
+            {
+                cellNeighbours += 1;
+            }
+            if (GridOfNeighbourCells.TryAdd(cellVector.ToPoint(), 1) == false)
+            {
+                GridOfNeighbourCells[cellVector.ToPoint()] += 1;
+            }
+
+
+                return cellNeighbours;
+        }
+
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin(transformMatrix: CurrentView.Matrix, samplerState: SamplerState.PointClamp);
 
-            for (int i = 0; i < GridOfCells.GetLength(0); i+= TileSize)
+            foreach (var cell in GridOfCells)
             {
-                for (int j = 0; j < GridOfCells.GetLength(1); j+= TileSize)
-                {
-                    if (GridOfCells[i, j].IsActtive == true)
-                    {
+                spriteBatch.Draw(CellTexture, new Vector2((cell.Key.X * TileSize), cell.Key.Y * TileSize), null, Color.Gray, 0, Vector2.Zero, TileSize - 2, SpriteEffects.None, 0);
 
-                        spriteBatch.Draw(CellTexture, new Vector2((GridOfCells[i, j].XPosition), GridOfCells[i, j].YPosition), null, Color.Gray, 0, Vector2.Zero, TileSize - 2, SpriteEffects.None, 0);
-                    }
-                    if (GridOfCells[i, j].IsHovering == true)
-                    {
-                        spriteBatch.Draw(CellTexture, new Vector2((GridOfCells[i, j].XPosition), GridOfCells[i, j].YPosition), null, Color.DarkGray, 0, Vector2.Zero, TileSize - 2, SpriteEffects.None, 0);
-                    }
-                }
             }
-                
+            
+            spriteBatch.Draw(CellTexture, new Vector2((mouseLocationSimplified.X * TileSize), mouseLocationSimplified.Y * TileSize), null, Color.DarkGray, 0, Vector2.Zero, TileSize - 2, SpriteEffects.None, 0);
+
             spriteBatch.End();
         }
         
-        public Grid ReturnGrid()
+        public void CreateGrid()
         {
-            return this;
-        }
+            GridOfCells = new Dictionary<Point, bool>();
 
-        public Cell[,] CreateGrid()
-        {
-            GridOfCells = new Cell[ViewportWidth,ViewportHeight];
-           
-            int indexofcell = 0;
             CellTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
             CellTexture.SetData(new Color[] { Color.DarkGray});
 
-            for (var i = 0; i <=ViewportWidth - 1; i+=TileSize)
-            {
-                for (var j = 0; j <= ViewportHeight - 1; j += TileSize)
-                {
-
-                    
-                    GridOfCells[i,j] = new Cell(Game, Graphics, new Vector2(i , j), i, j, false, indexofcell, false);
-                    indexofcell += 1;
-                    
-                }
-            }
-            
-            
-            return GridOfCells;
+         
         }
 
     }
