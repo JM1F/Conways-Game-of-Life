@@ -53,7 +53,7 @@ namespace Conways_Game_of_Life
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             _spriteBatchLOGO = new SpriteBatch(GraphicsDevice);
             Logo = this.Content.Load<Texture2D>("GOLLogo");
-            LogoRectangle = new Rectangle(490, 0, 300, 125);
+            
 
             font = this.Content.Load<SpriteFont>("ArialFont");
         }
@@ -67,7 +67,10 @@ namespace Conways_Game_of_Life
             var keyboardState = Keyboard.GetState();
 
             CurrentView.Update(gameTime, GraphicsDevice.Viewport, Window);
-            
+
+            LogoRectangle = new Rectangle(_graphics.GraphicsDevice.Viewport.Width / 2 - 150, 0, 300, 125);
+
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -85,10 +88,12 @@ namespace Conways_Game_of_Life
             {
                 Logohovered = false;    
             }
-            
 
             _grid.Update();
-            
+
+
+
+
             base.Update(gameTime);
 
             PreviousKeyboardstate = keyboardState;
@@ -121,12 +126,14 @@ namespace Conways_Game_of_Life
                 {
                     _spriteBatchLOGO.Draw(Logo, LogoRectangle, new Color(Color.White, 0.7f));
                 }
-            }
-            
 
-            
-            
-            
+                _spriteBatchLOGO.DrawString(font, "X:" + _grid.mouseLocationSimplified.X.ToString() + "Y:" + _grid.mouseLocationSimplified.Y.ToString(), new Vector2(0, 15), Color.Black);
+            }
+
+
+
+
+
 
             _spriteBatchLOGO.End();
 

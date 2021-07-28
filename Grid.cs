@@ -61,6 +61,8 @@ namespace Conways_Game_of_Life
 
             mouseLocationSimplified = new Vector2(MathF.Floor(mouseLocation.X / TileSize), MathF.Floor(mouseLocation.Y / TileSize));
 
+            
+
             if (keyboardState.IsKeyDown(Keys.R))
             {
                 GridOfCells = new Dictionary<Point, bool>();
