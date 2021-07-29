@@ -18,7 +18,7 @@ namespace Conways_Game_of_Life
         public SpriteFont font;
         public Texture2D Logo;
         public KeyboardState PreviousKeyboardstate;
-        
+        public int updateValue { get; set; } = 0;
 
         public Game1()
         {
@@ -27,8 +27,11 @@ namespace Conways_Game_of_Life
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             this.Window.AllowUserResizing = true;
-
+            IsFixedTimeStep = true;
+            
         }
+
+
         
         protected override void Initialize()
         {
@@ -60,7 +63,7 @@ namespace Conways_Game_of_Life
 
         protected override void Update(GameTime gameTime)
         {
-
+            
             var mouseState = Mouse.GetState();
             var mouseLocation = new Point(mouseState.X, mouseState.Y);
 
@@ -73,6 +76,21 @@ namespace Conways_Game_of_Life
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            if (keyboardState.IsKeyDown(Keys.Up) && PreviousKeyboardstate.IsKeyUp(Keys.Up))
+            {
+                if (updateValue != 0 || updateValue !< 0)
+                {
+                    updateValue -= 1;
+                }
+            }
+            if (keyboardState.IsKeyDown(Keys.Down) && PreviousKeyboardstate.IsKeyUp(Keys.Down))
+            {
+                if (updateValue != 10 || updateValue !> 10)
+                {
+                    updateValue += 1;
+                }
+            }
 
             if (keyboardState.IsKeyDown(Keys.T) && PreviousKeyboardstate.IsKeyUp(Keys.T))
             {
@@ -89,21 +107,25 @@ namespace Conways_Game_of_Life
                 Logohovered = false;    
             }
 
-            _grid.Update();
+            
+            _grid.Update(updateValue);
 
-
-
+            PreviousKeyboardstate = keyboardState;
 
             base.Update(gameTime);
 
-            PreviousKeyboardstate = keyboardState;
+            
         }
 
         protected override void Draw(GameTime gameTime)
         {
             
             GraphicsDevice.Clear(Color.White);
+
+           
             _grid.Draw(_spriteBatch);
+                
+            
 
             _spriteBatchLOGO.Begin();
            
@@ -128,6 +150,7 @@ namespace Conways_Game_of_Life
                 }
 
                 _spriteBatchLOGO.DrawString(font, "X:" + _grid.mouseLocationSimplified.X.ToString() + "Y:" + _grid.mouseLocationSimplified.Y.ToString(), new Vector2(0, 15), Color.Black);
+                _spriteBatchLOGO.DrawString(font,"Slow: " + updateValue.ToString(), new Vector2(0, 30), Color.Black);
             }
 
 

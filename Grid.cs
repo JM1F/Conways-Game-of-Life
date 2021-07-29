@@ -34,6 +34,9 @@ namespace Conways_Game_of_Life
 
         public bool GameInProgress { get; set; } = false;
 
+        public int updateValGrid { get; set; } = 0;
+        public int updateValueGame { get; set; }
+
         public void Main(Game CurrentGame, GraphicsDeviceManager CurentGraphics, View view)
         {
             Game = CurrentGame;
@@ -44,10 +47,10 @@ namespace Conways_Game_of_Life
             GameInProgress = false;
         }
 
-        public void Update()
+        public void Update(int gameUpdateValue)
         {
+            updateValueGame = gameUpdateValue;
             
-
             keyboardState = Keyboard.GetState();
 
             if (keyboardState.IsKeyDown(Keys.Space) && previousKeyboardstate.IsKeyUp(Keys.Space))
@@ -94,53 +97,68 @@ namespace Conways_Game_of_Life
             }
             if (GameInProgress == true)
             {
+                if (updateValGrid > 10)
+                {
+                    updateValGrid = 0;
+                }
+                
                 ProceedToNextGeneration();
+                updateValGrid += 1;
             }
 
             previousKeyboardstate = keyboardState;
+            
         }
 
         
        public void ProceedToNextGeneration()
         {
-            Dictionary<Point, bool> NextGridOfCells = new Dictionary<Point, bool>();
-
-            GridOfNeighbourCells = new Dictionary<Point, int>();
-
-            foreach (var cell in GridOfCells)
+            if (updateValGrid == updateValueGame || GameInProgress == false || updateValueGame == 0)
             {
-                int cellNeighbours = 0;
-
-                cellNeighbours += CheckNeighbours(cell, -1, 0);
-                cellNeighbours += CheckNeighbours(cell, 0, -1);
-                cellNeighbours += CheckNeighbours(cell, 1, 0);
-                cellNeighbours += CheckNeighbours(cell, 0, 1);
-
-                cellNeighbours += CheckNeighbours(cell, 1, 1);
-                cellNeighbours += CheckNeighbours(cell, -1, -1);
-                cellNeighbours += CheckNeighbours(cell, -1, 1);
-                cellNeighbours += CheckNeighbours(cell, 1, -1);
                 
-                if ( cellNeighbours >= 2 && cellNeighbours < 4 )
-                {
-                    NextGridOfCells.Add(cell.Key,cell.Value);
-                }
+                Dictionary<Point, bool> NextGridOfCells = new Dictionary<Point, bool>();
 
-            }
-            foreach (var neighbourCell in GridOfNeighbourCells)
-            {
-                if (neighbourCell.Value == 3)
+                GridOfNeighbourCells = new Dictionary<Point, int>();
+
+                foreach (var cell in GridOfCells)
                 {
-                    if (NextGridOfCells.ContainsKey(neighbourCell.Key) == false)
+                    int cellNeighbours = 0;
+
+                    cellNeighbours += CheckNeighbours(cell, -1, 0);
+                    cellNeighbours += CheckNeighbours(cell, 0, -1);
+                    cellNeighbours += CheckNeighbours(cell, 1, 0);
+                    cellNeighbours += CheckNeighbours(cell, 0, 1);
+
+                    cellNeighbours += CheckNeighbours(cell, 1, 1);
+                    cellNeighbours += CheckNeighbours(cell, -1, -1);
+                    cellNeighbours += CheckNeighbours(cell, -1, 1);
+                    cellNeighbours += CheckNeighbours(cell, 1, -1);
+
+                    if (cellNeighbours >= 2 && cellNeighbours < 4)
                     {
-                        NextGridOfCells.Add(neighbourCell.Key, true);
+                        NextGridOfCells.Add(cell.Key, cell.Value);
+                    }
+
+                }
+                foreach (var neighbourCell in GridOfNeighbourCells)
+                {
+                    if (neighbourCell.Value == 3)
+                    {
+                        if (NextGridOfCells.ContainsKey(neighbourCell.Key) == false)
+                        {
+                            NextGridOfCells.Add(neighbourCell.Key, true);
+                        }
+
                     }
 
                 }
 
+                GridOfCells = NextGridOfCells;
+                updateValGrid = 0;
             }
+            
+            
 
-            GridOfCells = NextGridOfCells;
 
         }
         
