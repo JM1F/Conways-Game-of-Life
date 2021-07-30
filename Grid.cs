@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
+using System.IO;
 
 namespace Conways_Game_of_Life
 {
@@ -25,6 +26,7 @@ namespace Conways_Game_of_Life
         public KeyboardState previousKeyboardstate;
 
         public Dictionary<Point, bool> GridOfCells { get; set; }
+        public Dictionary<Point, bool> GridOfCellsTest { get; set; }
 
         public Dictionary<Point, int> GridOfNeighbourCells { get; set; }
 
@@ -45,6 +47,7 @@ namespace Conways_Game_of_Life
             ViewportHeight = Game.GraphicsDevice.Viewport.Height;
             ViewportWidth = Game.GraphicsDevice.Viewport.Width;
             GameInProgress = false;
+            
         }
 
         public void Update(int gameUpdateValue)
@@ -64,7 +67,11 @@ namespace Conways_Game_of_Life
 
             mouseLocationSimplified = new Vector2(MathF.Floor(mouseLocation.X / TileSize), MathF.Floor(mouseLocation.Y / TileSize));
 
-            
+
+            if (keyboardState.IsKeyDown(Keys.A) && previousKeyboardstate.IsKeyUp(Keys.A))
+            {
+                ReadPattern();
+            }
 
             if (keyboardState.IsKeyDown(Keys.R))
             {
@@ -184,9 +191,14 @@ namespace Conways_Game_of_Life
         {
             spriteBatch.Begin(transformMatrix: CurrentView.Matrix, samplerState: SamplerState.PointClamp);
 
+
             foreach (var cell in GridOfCells)
             {
-                spriteBatch.Draw(CellTexture, new Vector2((cell.Key.X * TileSize), cell.Key.Y * TileSize), null, Color.Gray, 0, Vector2.Zero, TileSize - 2, SpriteEffects.None, 0);
+                if (cell.Key.X < 100 && cell.Key.Y < 100)
+                {
+                    spriteBatch.Draw(CellTexture, new Vector2((cell.Key.X * TileSize), cell.Key.Y * TileSize), null, Color.Gray, 0, Vector2.Zero, TileSize - 2, SpriteEffects.None, 0);
+
+                }
 
             }
             
@@ -201,6 +213,33 @@ namespace Conways_Game_of_Life
 
             CellTexture = new Texture2D(Game.GraphicsDevice, 1, 1);
             CellTexture.SetData(new Color[] { Color.DarkGray});
+        }
+
+        public void ReadPattern()
+        {
+            string[] text = File.ReadAllLines("C:/Users/Sharp/Desktop/Conway's Game of Life/Conway's-Game-of-Life/testFile.txt");
+
+            int lineCount = 0;
+
+            foreach (string line in text)
+            {
+                
+                for (int i = 0; i < line.Length; i++)
+                {
+                    if ( line[i] == 'X')
+                    {
+                        Point coordinates = new Point(i,lineCount);
+
+                        if (GridOfCells.ContainsKey(mouseLocationSimplified.ToPoint() + coordinates) == false)
+                        {
+                            GridOfCells.Add(mouseLocationSimplified.ToPoint() + coordinates, true);
+                        }
+                    }
+
+                }
+                lineCount += 1;
+            }
+            
         }
 
     }
