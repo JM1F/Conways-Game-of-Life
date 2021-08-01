@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Diagnostics;
+using System.Linq;
 
 namespace Conways_Game_of_Life
 {
@@ -11,13 +13,20 @@ namespace Conways_Game_of_Life
         private SpriteBatch _spriteBatchLOGO;
         private Grid _grid;
         public View CurrentView;
-        
+        public string fileString { get; set; } = "";
+
         public Rectangle LogoRectangle;
         public bool Logohovered { get; set; } = false;
         public bool UIActive { get; set; } = false;
+        public bool FileInputInProgress { get; set; } = false;
+        public bool CapsLockEnabled { get; set; } = false;
+        public bool ShiftEnabled { get; set; } = false;
+
         public SpriteFont font;
         public Texture2D Logo;
         public KeyboardState PreviousKeyboardstate;
+        public Keys[] PreviousKeysPressed = new Keys[10];
+ 
         public int updateValue { get; set; } = 0;
 
         public Game1()
@@ -30,9 +39,6 @@ namespace Conways_Game_of_Life
             IsFixedTimeStep = true;
             
         }
-
-
-        
         protected override void Initialize()
         {
 
@@ -77,26 +83,83 @@ namespace Conways_Game_of_Life
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            if (keyboardState.IsKeyDown(Keys.Up) && PreviousKeyboardstate.IsKeyUp(Keys.Up))
+            if (keyboardState.IsKeyDown(Keys.Up) && PreviousKeyboardstate.IsKeyUp(Keys.Up) && FileInputInProgress == false)
             {
                 if (updateValue != 0 || updateValue !< 0)
                 {
                     updateValue -= 1;
                 }
             }
-            if (keyboardState.IsKeyDown(Keys.Down) && PreviousKeyboardstate.IsKeyUp(Keys.Down))
+            if (keyboardState.IsKeyDown(Keys.Down) && PreviousKeyboardstate.IsKeyUp(Keys.Down) && FileInputInProgress == false)
             {
-                if (updateValue != 10 || updateValue !> 10)
+                if (updateValue != 20 || updateValue !> 20)
                 {
                     updateValue += 1;
                 }
             }
 
-            if (keyboardState.IsKeyDown(Keys.T) && PreviousKeyboardstate.IsKeyUp(Keys.T))
+            if (keyboardState.IsKeyDown(Keys.T) && PreviousKeyboardstate.IsKeyUp(Keys.T) && FileInputInProgress == false)
             {
                 UIActive = !UIActive;
             }
+            if (keyboardState.IsKeyDown(Keys.OemTilde) && PreviousKeyboardstate.IsKeyUp(Keys.OemTilde) && _grid.GameInProgress == false )
+            {
+                FileInputInProgress = !FileInputInProgress;
+            }
 
+            if (keyboardState.IsKeyDown(Keys.CapsLock) && PreviousKeyboardstate.IsKeyUp(Keys.CapsLock))
+            {
+                CapsLockEnabled = !CapsLockEnabled;
+            }
+            
+            if (keyboardState.IsKeyDown(Keys.LeftShift) || keyboardState.IsKeyDown(Keys.RightShift) )
+            {
+                ShiftEnabled = true;
+            }
+            else
+            {
+                ShiftEnabled = false;
+            }
+
+            if (FileInputInProgress == true )
+            {
+                Keys[] CurrentPressedKeys = keyboardState.GetPressedKeys();
+                Keys[] ExemptKeys = { Keys.Back, Keys.LeftShift, Keys.RightShift, Keys.LeftControl, Keys.RightControl, Keys.CapsLock, Keys.OemTilde };
+
+                foreach (Keys key in CurrentPressedKeys)
+                {
+                    if ( !PreviousKeysPressed.Contains(key) || PreviousKeysPressed.Contains(Keys.Back))
+                    {
+                        if (key == Keys.Back && fileString.Length > 0)
+                        {
+                            fileString = fileString.Remove(fileString.Length - 1);
+                        }
+                        if (!ExemptKeys.Contains(key) && fileString.Length <= 25)
+                        {
+                            if (key == Keys.OemPeriod)
+                            {
+                                fileString += ".";
+                            }
+                            else if (key == Keys.Space)
+                            {
+                                fileString += " ";
+                            }
+                            else if (CapsLockEnabled == true || ShiftEnabled == true)
+                            {
+                                fileString += key.ToString().ToUpper();
+                            }
+                            else
+                            {
+                                fileString += key.ToString().ToLower();
+                            }
+                            
+                        }
+                        
+                    }
+                }
+                PreviousKeysPressed = CurrentPressedKeys;
+
+            }
 
             if (LogoRectangle.Contains(mouseLocation))
             {
@@ -108,7 +171,7 @@ namespace Conways_Game_of_Life
             }
 
             
-            _grid.Update(updateValue);
+            _grid.Update(updateValue, FileInputInProgress, fileString);
 
             PreviousKeyboardstate = keyboardState;
 
@@ -116,6 +179,7 @@ namespace Conways_Game_of_Life
 
             
         }
+        
 
         protected override void Draw(GameTime gameTime)
         {
@@ -150,7 +214,9 @@ namespace Conways_Game_of_Life
                 }
 
                 _spriteBatchLOGO.DrawString(font, "X:" + _grid.mouseLocationSimplified.X.ToString() + "Y:" + _grid.mouseLocationSimplified.Y.ToString(), new Vector2(0, 15), Color.Black);
-                _spriteBatchLOGO.DrawString(font,"Slow: " + updateValue.ToString(), new Vector2(0, 30), Color.Black);
+                _spriteBatchLOGO.DrawString(font,"Slow: x" + updateValue.ToString(), new Vector2(0, 30), Color.Black);
+                _spriteBatchLOGO.DrawString(font, "File: " + fileString, new Vector2(0, 45), Color.Black);
+
             }
 
 

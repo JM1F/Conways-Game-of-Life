@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using System.IO;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Conways_Game_of_Life
 {
@@ -38,6 +39,8 @@ namespace Conways_Game_of_Life
 
         public int updateValGrid { get; set; } = 0;
         public int updateValueGame { get; set; }
+        public string FileString { get; set; }
+        public bool FileInputInProgress { get; set; }
 
         public void Main(Game CurrentGame, GraphicsDeviceManager CurentGraphics, View view)
         {
@@ -50,13 +53,14 @@ namespace Conways_Game_of_Life
             
         }
 
-        public void Update(int gameUpdateValue)
+        public void Update(int gameUpdateValue, bool fileinputinprogress, string fileString)
         {
             updateValueGame = gameUpdateValue;
-            
+            FileInputInProgress = fileinputinprogress;
+            FileString = fileString;
             keyboardState = Keyboard.GetState();
 
-            if (keyboardState.IsKeyDown(Keys.Space) && previousKeyboardstate.IsKeyUp(Keys.Space))
+            if (keyboardState.IsKeyDown(Keys.Space) && previousKeyboardstate.IsKeyUp(Keys.Space) && fileinputinprogress == false)
             {
                 GameInProgress = !GameInProgress;
             }
@@ -68,16 +72,23 @@ namespace Conways_Game_of_Life
             mouseLocationSimplified = new Vector2(MathF.Floor(mouseLocation.X / TileSize), MathF.Floor(mouseLocation.Y / TileSize));
 
 
-            if (keyboardState.IsKeyDown(Keys.A) && previousKeyboardstate.IsKeyUp(Keys.A))
+            if (keyboardState.IsKeyDown(Keys.A) && previousKeyboardstate.IsKeyUp(Keys.A) && fileinputinprogress == false)
             {
-                ReadPattern();
+                try
+                {
+                    ReadPattern();
+                }
+                catch(IOException)
+                {
+                    // continue with the loop if file not found or error.
+                }  
             }
 
             if (keyboardState.IsKeyDown(Keys.R))
             {
                 GridOfCells = new Dictionary<Point, bool>();
             }
-            if (keyboardState.IsKeyDown(Keys.Right) && previousKeyboardstate.IsKeyUp(Keys.Right) && GameInProgress == false)
+            if (keyboardState.IsKeyDown(Keys.Right) && previousKeyboardstate.IsKeyUp(Keys.Right) && GameInProgress == false && FileInputInProgress == false)
             {
                 ProceedToNextGeneration();
             }
@@ -104,7 +115,7 @@ namespace Conways_Game_of_Life
             }
             if (GameInProgress == true)
             {
-                if (updateValGrid > 10)
+                if (updateValGrid > 20)
                 {
                     updateValGrid = 0;
                 }
@@ -194,11 +205,7 @@ namespace Conways_Game_of_Life
 
             foreach (var cell in GridOfCells)
             {
-                if (cell.Key.X < 100 && cell.Key.Y < 100)
-                {
-                    spriteBatch.Draw(CellTexture, new Vector2((cell.Key.X * TileSize), cell.Key.Y * TileSize), null, Color.Gray, 0, Vector2.Zero, TileSize - 2, SpriteEffects.None, 0);
-
-                }
+                spriteBatch.Draw(CellTexture, new Vector2((cell.Key.X * TileSize), cell.Key.Y * TileSize), null, Color.Gray, 0, Vector2.Zero, TileSize - 2, SpriteEffects.None, 0);
 
             }
             
@@ -217,7 +224,9 @@ namespace Conways_Game_of_Life
 
         public void ReadPattern()
         {
-            string[] text = File.ReadAllLines("C:/Users/Sharp/Desktop/Conway's Game of Life/Conway's-Game-of-Life/testFile.txt");
+            var textFilePath = Directory.GetCurrentDirectory() + "\\" + FileString;
+
+            string[] text = File.ReadAllLines(textFilePath);
 
             int lineCount = 0;
 
