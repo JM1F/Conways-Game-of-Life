@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using System.IO;
 using static System.Net.Mime.MediaTypeNames;
+using System.Linq;
 
 namespace Conways_Game_of_Life
 {
@@ -166,7 +167,6 @@ namespace Conways_Game_of_Life
                         {
                             NextGridOfCells.Add(neighbourCell.Key, true);
                         }
-
                     }
 
                 }
@@ -228,28 +228,72 @@ namespace Conways_Game_of_Life
 
             string[] text = File.ReadAllLines(textFilePath);
 
+            List<string> DecodedText = RLEDecode(text);
+             
+
             int lineCount = 0;
 
-            foreach (string line in text)
+            foreach(var line in DecodedText)
             {
                 
                 for (int i = 0; i < line.Length; i++)
                 {
-                    if ( line[i] == 'X')
+                    if (line[i] == 'o')
                     {
-                        Point coordinates = new Point(i,lineCount);
+                        Point coordinates = new Point(i, lineCount);
 
                         if (GridOfCells.ContainsKey(mouseLocationSimplified.ToPoint() + coordinates) == false)
                         {
                             GridOfCells.Add(mouseLocationSimplified.ToPoint() + coordinates, true);
                         }
                     }
-
                 }
                 lineCount += 1;
+
             }
+           
+            
+           
             
         }
+        public List<string> RLEDecode(string[] FileTextRLE)
+        {
+            List<string> DecodedStringFormat = new List<string>();
+            string DecodedString = "";
+            string NumberInString = "";
+
+            foreach (string line in FileTextRLE)
+            {
+                
+                for (int i = 0; i < line.Length ; i++)
+                {
+                    
+                    if (char.IsLetter(line[i]) && line[i] != '$')
+                    {
+                        if (NumberInString.Length > 0)
+                        {
+                            DecodedString += String.Concat(Enumerable.Repeat(line[i], int.Parse(NumberInString)));
+                        }
+                        else
+                        {
+                            DecodedString += line[i];
+                        }
+                        NumberInString = "";
+                    }
+                    else if (line[i] == '$')
+                    {
+
+                        DecodedStringFormat.Add(DecodedString);
+                        DecodedString = "";
+                    }
+                    else
+                    {
+                        NumberInString += line[i];
+                    }
+                }
+            }
+            return DecodedStringFormat;
+        }   
 
     }
 
