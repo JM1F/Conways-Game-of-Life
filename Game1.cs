@@ -27,7 +27,7 @@ namespace Conways_Game_of_Life
         public KeyboardState PreviousKeyboardstate;
         public Keys[] PreviousKeysPressed = new Keys[10];
  
-        public int updateValue { get; set; } = 0;
+        public int updateValue { get; set; } = 1;
 
         public Game1()
         {
@@ -85,7 +85,7 @@ namespace Conways_Game_of_Life
 
             if (keyboardState.IsKeyDown(Keys.Up) && PreviousKeyboardstate.IsKeyUp(Keys.Up) && FileInputInProgress == false)
             {
-                if (updateValue != 0 || updateValue !< 0)
+                if (updateValue != 1 || updateValue !< 1)
                 {
                     updateValue -= 1;
                 }
@@ -170,10 +170,10 @@ namespace Conways_Game_of_Life
                 Logohovered = false;    
             }
 
-            
+            PreviousKeyboardstate = keyboardState;
             _grid.Update(updateValue, FileInputInProgress, fileString);
 
-            PreviousKeyboardstate = keyboardState;
+            
 
             base.Update(gameTime);
 

@@ -60,7 +60,7 @@ namespace Conways_Game_of_Life
             FileString = fileString;
             keyboardState = Keyboard.GetState();
 
-            if (keyboardState.IsKeyDown(Keys.Space) && previousKeyboardstate.IsKeyUp(Keys.Space) && fileinputinprogress == false)
+            if (keyboardState.IsKeyDown(Keys.Space) && previousKeyboardstate.IsKeyUp(Keys.Space) && FileInputInProgress == false)
             {
                 GameInProgress = !GameInProgress;
             }
@@ -72,7 +72,7 @@ namespace Conways_Game_of_Life
             mouseLocationSimplified = new Vector2(MathF.Floor(mouseLocation.X / TileSize), MathF.Floor(mouseLocation.Y / TileSize));
 
 
-            if (keyboardState.IsKeyDown(Keys.A) && previousKeyboardstate.IsKeyUp(Keys.A) && fileinputinprogress == false)
+            if (keyboardState.IsKeyDown(Keys.A) && previousKeyboardstate.IsKeyUp(Keys.A) && FileInputInProgress == false)
             {
                 try
                 {
@@ -84,7 +84,7 @@ namespace Conways_Game_of_Life
                 }  
             }
 
-            if (keyboardState.IsKeyDown(Keys.R))
+            if (keyboardState.IsKeyDown(Keys.R) && FileInputInProgress == false)
             {
                 GridOfCells = new Dictionary<Point, bool>();
             }
@@ -131,7 +131,7 @@ namespace Conways_Game_of_Life
         
        public void ProceedToNextGeneration()
         {
-            if (updateValGrid == updateValueGame || GameInProgress == false || updateValueGame == 0)
+            if (updateValGrid == updateValueGame || GameInProgress == false)
             {
                 
                 Dictionary<Point, bool> NextGridOfCells = new Dictionary<Point, bool>();
