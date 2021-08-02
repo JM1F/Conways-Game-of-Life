@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Diagnostics;
 using System.Linq;
+
 
 namespace Conways_Game_of_Life
 {
@@ -21,6 +23,7 @@ namespace Conways_Game_of_Life
         public bool FileInputInProgress { get; set; } = false;
         public bool CapsLockEnabled { get; set; } = false;
         public bool ShiftEnabled { get; set; } = false;
+        public string FramesPerSecondCounter { get; set; }
 
         public SpriteFont font;
         public Texture2D Logo;
@@ -135,7 +138,8 @@ namespace Conways_Game_of_Life
                         {
                             fileString = fileString.Remove(fileString.Length - 1);
                         }
-                        if (!ExemptKeys.Contains(key) && fileString.Length <= 25)
+                        
+                        if (!ExemptKeys.Contains(key) && fileString.Length <= 50)
                         {
                             if (key == Keys.OemPeriod)
                             {
@@ -163,6 +167,28 @@ namespace Conways_Game_of_Life
                                 }
                                 
                             }
+                            else if (key == Keys.OemQuestion)
+                            {
+                                if (ShiftEnabled == true)
+                                {
+                                    fileString += "?";
+                                }
+                                else
+                                {
+                                    fileString += "/";
+                                }
+                            }
+                            else if (key == Keys.OemPipe)
+                            {
+                                if (ShiftEnabled == true)
+                                {
+                                    fileString += "|";
+                                }
+                                else
+                                {
+                                    fileString += '\\';
+                                }
+                            }
                             else if (CapsLockEnabled == true || ShiftEnabled == true)
                             {
                                 fileString += key.ToString().ToUpper();
@@ -177,7 +203,7 @@ namespace Conways_Game_of_Life
                     }
                 }
                 PreviousKeysPressed = CurrentPressedKeys;
-
+                
             }
 
             if (LogoRectangle.Contains(mouseLocation))
@@ -192,8 +218,8 @@ namespace Conways_Game_of_Life
             PreviousKeyboardstate = keyboardState;
             _grid.Update(updateValue, FileInputInProgress, fileString);
 
-            
 
+            
             base.Update(gameTime);
 
             
@@ -235,14 +261,11 @@ namespace Conways_Game_of_Life
                 _spriteBatchLOGO.DrawString(font, "X:" + _grid.mouseLocationSimplified.X.ToString() + "Y:" + _grid.mouseLocationSimplified.Y.ToString(), new Vector2(0, 15), Color.Black);
                 _spriteBatchLOGO.DrawString(font,"Slow: x" + updateValue.ToString(), new Vector2(0, 30), Color.Black);
                 _spriteBatchLOGO.DrawString(font, "File: " + fileString, new Vector2(0, 45), Color.Black);
+                _spriteBatchLOGO.DrawString(font,"Gen: " + _grid.GenerationNumber.ToString(), new Vector2(0, 60), Color.Black);
+                _spriteBatchLOGO.DrawString(font, "Pop: " + _grid.CellPopulation.ToString(), new Vector2(0, 75), Color.Black);
+                _spriteBatchLOGO.DrawString(font, "FPS: " + Math.Round(1 / gameTime.ElapsedGameTime.TotalSeconds).ToString(), new Vector2(0, 90), Color.Black);
 
             }
-
-
-
-
-
-
             _spriteBatchLOGO.End();
 
             base.Draw(gameTime);

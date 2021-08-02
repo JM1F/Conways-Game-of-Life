@@ -40,6 +40,8 @@ namespace Conways_Game_of_Life
 
         public int updateValGrid { get; set; } = 0;
         public int updateValueGame { get; set; }
+        public int GenerationNumber { get; set; } = 0;
+        public int CellPopulation { get; set; } = 0;
         public string FileString { get; set; }
         public bool FileInputInProgress { get; set; }
 
@@ -64,6 +66,7 @@ namespace Conways_Game_of_Life
             if (keyboardState.IsKeyDown(Keys.Space) && previousKeyboardstate.IsKeyUp(Keys.Space) && FileInputInProgress == false)
             {
                 GameInProgress = !GameInProgress;
+                GenerationNumber = 0;
             }
 
             var mouseState = Mouse.GetState();
@@ -88,6 +91,7 @@ namespace Conways_Game_of_Life
             if (keyboardState.IsKeyDown(Keys.R) && FileInputInProgress == false)
             {
                 GridOfCells = new Dictionary<Point, bool>();
+                GenerationNumber = 0;
             }
             if (keyboardState.IsKeyDown(Keys.Right) && previousKeyboardstate.IsKeyUp(Keys.Right) && GameInProgress == false && FileInputInProgress == false)
             {
@@ -120,11 +124,12 @@ namespace Conways_Game_of_Life
                 {
                     updateValGrid = 0;
                 }
-                
+
                 ProceedToNextGeneration();
                 updateValGrid += 1;
+                
             }
-
+            CellPopulation = GridOfCells.Count(); 
             previousKeyboardstate = keyboardState;
             
         }
@@ -134,7 +139,7 @@ namespace Conways_Game_of_Life
         {
             if (updateValGrid == updateValueGame || GameInProgress == false)
             {
-                
+                GenerationNumber += 1;
                 Dictionary<Point, bool> NextGridOfCells = new Dictionary<Point, bool>();
 
                 GridOfNeighbourCells = new Dictionary<Point, int>();
@@ -224,7 +229,7 @@ namespace Conways_Game_of_Life
 
         public void ReadPattern()
         {
-            string textFilePath = Directory.GetCurrentDirectory() + "\\WikiTemplates" + "\\" + FileString ;
+            string textFilePath = Directory.GetCurrentDirectory() + "\\" + FileString ;
             
             string[] text = File.ReadAllLines(textFilePath);
 
@@ -268,33 +273,51 @@ namespace Conways_Game_of_Life
                         {
                             RLENextLine = true;
                         }
-                        if (RLENextLine == true)
-                        {
-                            for (int i = 0; i < line.Length; i++)
-                            {
-                                if (line[i] == 'O')
-                                {
-                                    Point coordinates = new Point(i, lineCount);
-
-                                    if (GridOfCells.ContainsKey(mouseLocationSimplified.ToPoint() + coordinates) == false)
-                                    {
-                                        GridOfCells.Add(mouseLocationSimplified.ToPoint() + coordinates, true);
-                                    }
-                                }
-
-                            }
-                            lineCount += 1;
-                        }
                     }
+                    if (RLENextLine == true)
+                    {
+                        for (int i = 0; i < line.Length; i++)
+                        {
+                            if (line[i] == 'O')
+                            {
+                                Point coordinates = new Point(i, lineCount);
+
+                                if (GridOfCells.ContainsKey(mouseLocationSimplified.ToPoint() + coordinates) == false)
+                                {
+                                    GridOfCells.Add(mouseLocationSimplified.ToPoint() + coordinates, true);
+                                }
+                            }
+
+                        }
+                        lineCount += 1;
+                    }
+                    
                 }
             }
             else if (fileExtention == ".txt")
             {
-                
+                int lineCount = 0;
+
+                foreach (var line in text)
+                {
+
+                    for (int i = 0; i < line.Length; i++)
+                    {
+                        if (line[i] == 'X')
+                        {
+                            Point coordinates = new Point(i, lineCount);
+
+                            if (GridOfCells.ContainsKey(mouseLocationSimplified.ToPoint() + coordinates) == false)
+                            {
+                                GridOfCells.Add(mouseLocationSimplified.ToPoint() + coordinates, true);
+                            }
+                        }
+                    }
+                    lineCount += 1;
+                }
+
+
             }
-            
-           
-            
         }
         public List<string> RLEDecode(string[] FileTextRLE)
         {

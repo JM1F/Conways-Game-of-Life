@@ -38,10 +38,10 @@ namespace Conways_Game_of_Life
 
             if (scrollValue < 0)
             {
-                Zoom /= 0.5f;
-                if (Zoom > 0.25f)
+                Zoom /= 2;
+                if (Zoom < 0.2f)
                 {
-                    Zoom = 0.25f;
+                    Zoom = 0.2f;
                 }
             }
 
