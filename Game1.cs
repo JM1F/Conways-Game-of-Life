@@ -125,7 +125,8 @@ namespace Conways_Game_of_Life
             {
                 Keys[] CurrentPressedKeys = keyboardState.GetPressedKeys();
                 Keys[] ExemptKeys = { Keys.Back, Keys.LeftShift, Keys.RightShift, Keys.LeftControl, Keys.RightControl, Keys.CapsLock, Keys.OemTilde };
-
+                Keys[] Numbers = { Keys.D0, Keys.D1, Keys.D2, Keys.D3, Keys.D4, Keys.D5, Keys.D6, Keys.D7, Keys.D8, Keys.D9};
+                
                 foreach (Keys key in CurrentPressedKeys)
                 {
                     if ( !PreviousKeysPressed.Contains(key) || PreviousKeysPressed.Contains(Keys.Back))
@@ -143,6 +144,24 @@ namespace Conways_Game_of_Life
                             else if (key == Keys.Space)
                             {
                                 fileString += " ";
+                            }
+                            else if (Numbers.Contains(key))
+                            {
+                                
+                                fileString += key.ToString()[^1];
+
+                            }
+                            else if (key == Keys.OemMinus)
+                            {
+                                if (CapsLockEnabled == true || ShiftEnabled == true)
+                                {
+                                    fileString += "_";
+                                }
+                                else
+                                {
+                                    fileString += "-";
+                                }
+                                
                             }
                             else if (CapsLockEnabled == true || ShiftEnabled == true)
                             {

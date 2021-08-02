@@ -224,34 +224,74 @@ namespace Conways_Game_of_Life
 
         public void ReadPattern()
         {
-            var textFilePath = Directory.GetCurrentDirectory() + "\\" + FileString;
-
+            string textFilePath = Directory.GetCurrentDirectory() + "\\WikiTemplates" + "\\" + FileString ;
+            
             string[] text = File.ReadAllLines(textFilePath);
 
-            List<string> DecodedText = RLEDecode(text);
-             
+            int fileExtentionStartIndex = textFilePath.LastIndexOf(".");
+            int lengthOfSubstring = textFilePath.Length - fileExtentionStartIndex;
 
-            int lineCount = 0;
+            string fileExtention = textFilePath.Substring(fileExtentionStartIndex, lengthOfSubstring);
 
-            foreach(var line in DecodedText)
+            if (fileExtention == ".rle")
             {
-                
-                for (int i = 0; i < line.Length; i++)
-                {
-                    if (line[i] == 'o')
-                    {
-                        Point coordinates = new Point(i, lineCount);
+                List<string> DecodedText = RLEDecode(text);
+                int lineCount = 0;
 
-                        if (GridOfCells.ContainsKey(mouseLocationSimplified.ToPoint() + coordinates) == false)
+                foreach (var line in DecodedText)
+                {
+
+                    for (int i = 0; i < line.Length; i++)
+                    {
+                        if (line[i] == 'o')
                         {
-                            GridOfCells.Add(mouseLocationSimplified.ToPoint() + coordinates, true);
+                            Point coordinates = new Point(i, lineCount);
+
+                            if (GridOfCells.ContainsKey(mouseLocationSimplified.ToPoint() + coordinates) == false)
+                            {
+                                GridOfCells.Add(mouseLocationSimplified.ToPoint() + coordinates, true);
+                            }
+                        }
+                    }
+                    lineCount += 1;
+                }
+            }
+            else if (fileExtention == ".cells")
+            {
+                int lineCount = 0;
+                bool RLENextLine = false;
+                foreach (var line in text)
+                {
+                    if (line.Length != 0)
+                    {
+                        if (line[0] != '!')
+                        {
+                            RLENextLine = true;
+                        }
+                        if (RLENextLine == true)
+                        {
+                            for (int i = 0; i < line.Length; i++)
+                            {
+                                if (line[i] == 'O')
+                                {
+                                    Point coordinates = new Point(i, lineCount);
+
+                                    if (GridOfCells.ContainsKey(mouseLocationSimplified.ToPoint() + coordinates) == false)
+                                    {
+                                        GridOfCells.Add(mouseLocationSimplified.ToPoint() + coordinates, true);
+                                    }
+                                }
+
+                            }
+                            lineCount += 1;
                         }
                     }
                 }
-                lineCount += 1;
-
             }
-           
+            else if (fileExtention == ".txt")
+            {
+                
+            }
             
            
             
@@ -261,36 +301,61 @@ namespace Conways_Game_of_Life
             List<string> DecodedStringFormat = new List<string>();
             string DecodedString = "";
             string NumberInString = "";
+            bool RLENextLine = false;
 
             foreach (string line in FileTextRLE)
             {
-                
-                for (int i = 0; i < line.Length ; i++)
+                if (RLENextLine == true)
                 {
-                    
-                    if (char.IsLetter(line[i]) && line[i] != '$')
+                    for (int i = 0; i < line.Length; i++)
                     {
-                        if (NumberInString.Length > 0)
+
+                        if (char.IsLetter(line[i]) && line[i] != '$')
                         {
-                            DecodedString += String.Concat(Enumerable.Repeat(line[i], int.Parse(NumberInString)));
+                            if (NumberInString.Length > 0)
+                            {
+                                DecodedString += String.Concat(Enumerable.Repeat(line[i], int.Parse(NumberInString)));
+                            }
+                            else
+                            {
+                                DecodedString += line[i];
+                            }
+                            NumberInString = "";
+                        }
+                        else if (line[i] == '$' || line[i] == '!')
+                        {
+                            if (NumberInString.Length > 0)
+                            {
+                                for (var j = 0; j < int.Parse(NumberInString); j++)
+                                {
+                                    DecodedStringFormat.Add(DecodedString);
+                                    DecodedString = "";
+                                }
+
+                            }
+                            else
+                            {
+                                DecodedStringFormat.Add(DecodedString);
+                                DecodedString = "";
+                            }
+                            Debug.WriteLine(NumberInString);
+
+
+                            NumberInString = "";
+
                         }
                         else
                         {
-                            DecodedString += line[i];
-                        }
-                        NumberInString = "";
-                    }
-                    else if (line[i] == '$')
-                    {
+                            NumberInString += line[i];
 
-                        DecodedStringFormat.Add(DecodedString);
-                        DecodedString = "";
-                    }
-                    else
-                    {
-                        NumberInString += line[i];
+                        }
                     }
                 }
+                if (line.Contains("x = ") && line.Contains("y = ") && line.Contains("rule = "))
+                {
+                    RLENextLine = true;
+                }
+
             }
             return DecodedStringFormat;
         }   
