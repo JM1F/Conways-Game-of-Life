@@ -103,3 +103,20 @@ XX########X###X#XX####X#X#######
 `ESCAPE` **: Exits the program**
 
 ## Download
+
+Download [Here](https://github.com/JM1F/Conways-Game-of-Life/releases/tag/v1.0)
+
+Versions:
+
+- Windows - win-x64
+- Windows - win-x86
+- Linux - linux-x64
+- Mac - osx-x64
+
+## More information about John Conway's Game of Life
+
+- [LifeWiki](https://conwaylife.com/wiki/Main_Page)
+
+- [Conway's Game of Life Wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
+
+- [Pattern Libary](https://conwaylife.appspot.com/library)
