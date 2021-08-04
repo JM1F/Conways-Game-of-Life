@@ -267,15 +267,15 @@ namespace Conways_Game_of_Life
             string textFilePath = Directory.GetCurrentDirectory() + "\\" + FileString ;
             // Reads the file
             string[] text = File.ReadAllLines(textFilePath);
-            // Gets the file extention beginning index
-            int fileExtentionStartIndex = textFilePath.LastIndexOf(".");
-            // Gets the length needed for the file extention to make a substring
-            int lengthOfSubstring = textFilePath.Length - fileExtentionStartIndex;
-            // Variable for the file extention 
-            string fileExtention = textFilePath.Substring(fileExtentionStartIndex, lengthOfSubstring);
+            // Gets the file extension beginning index
+            int fileextensionStartIndex = textFilePath.LastIndexOf(".");
+            // Gets the length needed for the file extension to make a substring
+            int lengthOfSubstring = textFilePath.Length - fileextensionStartIndex;
+            // Variable for the file extension 
+            string fileextension = textFilePath.Substring(fileextensionStartIndex, lengthOfSubstring);
 
-            // Checks what type of file extention and proceeds accordinly
-            if (fileExtention == ".rle")
+            // Checks what type of file extension and proceeds accordinly
+            if (fileextension == ".rle")
             {
                 // Run Length Encoding File - More efficient hardly human readable.
 
@@ -305,7 +305,7 @@ namespace Conways_Game_of_Life
                     lineCount += 1;
                 }
             }
-            else if (fileExtention == ".cells")
+            else if (fileextension == ".cells")
             {
                 // .Cells Files - Less efficient but easier to understand.
                 int lineCount = 0;
@@ -349,7 +349,7 @@ namespace Conways_Game_of_Life
                     
                 }
             }
-            else if (fileExtention == ".txt")
+            else if (fileextension == ".txt")
             {
                 // .txt Files - Make your own patterns and save them to use. 
                 int lineCount = 0;
