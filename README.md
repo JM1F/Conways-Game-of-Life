@@ -24,18 +24,32 @@ Source: [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of
 
 ## Project Details
 
-![image](https://user-images.githubusercontent.com/71614127/128253341-5086e9b7-f5d5-49f6-8b71-64e5319798df.png)
+![GOL](https://user-images.githubusercontent.com/71614127/128258060-947d887b-1c8c-4ad8-8f39-24ade2b5ba2d.gif)
+
 
 This rendition provides an infinite grid space in which you are able to draw and erase cells within. All cells within the grid follow the rules stated above.
 
 <b>The game also comes infomation about:</b>
 
-- Whether the game is "Running" or "Not Running" 
-- Mouse position
+- Whether the game is "Running" or "Not Running" <img align="right" src="https://user-images.githubusercontent.com/71614127/128254027-2aba6c48-1ce9-455a-8761-f1be2fe5d8a4.png">
+- Mouse position 
 - Speed of program
 - Selected file
 - Generation number
 - Population amount
 - Frames Per Second Counter
 
-![image](https://user-images.githubusercontent.com/71614127/128254027-2aba6c48-1ce9-455a-8761-f1be2fe5d8a4.png)
+
+## How the file input works
+
+To activate the file input process you will need to press the <b>`</b> or <b>¬</b> key. Once active, you will not be able to run the next generations until the process is turned off with the same button(s). You can input one of the files from the LifeWikiPatterns.zip file or make your own text file which details are below.
+
+<b>Step-by-Step:</b>
+
+- Press the key ` or ¬ to activate
+- Type the directory of the file. e.g. 1beacon.cells OR 1beacon.rle OR FileName\1beacon.rle
+- Press the key ` or ¬ to deactivate
+- Press `a` to output pattern to mouse location
+
+## How to add your own patterns with a .txt file
+
