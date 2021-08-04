@@ -451,7 +451,6 @@ namespace Conways_Game_of_Life
                 {
                     RLENextLine = true;
                 }
-
             }
             // Returns the deocded list
             return DecodedStringFormat;

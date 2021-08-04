@@ -50,6 +50,7 @@ namespace Conways_Game_of_Life
             _graphics.PreferredBackBufferWidth = 1280;
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.ApplyChanges();
+            Window.Title = "Conway's Game of Life";
             //Generate a view for the game
             CurrentView = new View();
             _grid.Main(this, _graphics, CurrentView);
