@@ -104,7 +104,7 @@ XX########X###X#XX####X#X#######
 
 ## Download
 
-Download [Here](https://github.com/JM1F/Conways-Game-of-Life/releases/tag/v1.0)
+***Download [Here](https://github.com/JM1F/Conways-Game-of-Life/releases/tag/v1.0)***
 
 Versions:
 
