@@ -32,7 +32,7 @@ This rendition provides an infinite grid space in which you are able to draw and
 - Made using [Monogame.](https://www.monogame.net/)
 - [.NET Core 3.1](https://dotnet.microsoft.com/download/dotnet/3.1)
 
-<b>The game also comes infomation about:</b>
+<b>The game also contains infomation about:</b>
 
 - Whether the game is "Running" or "Not Running" <img align="right" src="https://user-images.githubusercontent.com/71614127/128254027-2aba6c48-1ce9-455a-8761-f1be2fe5d8a4.png">
 - Mouse position 
